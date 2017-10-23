@@ -1,5 +1,6 @@
 package raider.project.EfreiCine.controller;
 
+import java.io.IOException;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +18,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import raider.project.EfreiCine.model.User;
 import raider.project.EfreiCine.model.UserProfile;
 import raider.project.EfreiCine.service.UserProfileService;
 import raider.project.EfreiCine.service.UserService;
+import raider.project.EfreiCine.service.MovieService;
+
 
 
 @Controller
@@ -31,6 +35,9 @@ public class HelloWorldController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    MovieService movieService;
 
     @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
     public String homePage(ModelMap model) {
@@ -112,8 +119,18 @@ public class HelloWorldController {
         return "registrationsuccess";
     }
 
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String searchPage(String movie) {
+        return "search";
+    }
 
 
+    @RequestMapping(value = "/search", method=RequestMethod.POST)
+    public String searchMovie(@RequestParam String movie) throws IOException {
+       movieService.setMovieName(movie);
+       movieService.movieSearch();
+        return "results";
+    }
 
     private String getPrincipal(){
         String userName;
