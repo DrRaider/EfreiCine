@@ -1,5 +1,8 @@
 package raider.project.EfreiCine.service;
 
+import com.uwetrottmann.tmdb2.entities.BaseMovie;
+import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
+
 import java.io.IOException;
 
 public interface MovieService {
@@ -8,7 +11,7 @@ public interface MovieService {
 
     public void setMovieName(String movieName);
 
-    public void movieSearch() throws IOException;
+    public BaseResultsPage<BaseMovie> movieSearch() throws IOException;
 
 }
 

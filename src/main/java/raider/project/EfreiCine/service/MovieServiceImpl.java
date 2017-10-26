@@ -1,5 +1,8 @@
 package raider.project.EfreiCine.service;
 
+import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
+import com.uwetrottmann.tmdb2.entities.BaseMovie;
+
 import com.uwetrottmann.tmdb2.entities.MovieResultsPage;
 import retrofit2.Call;
 
@@ -23,7 +26,7 @@ public class MovieServiceImpl implements MovieService{
         this.movieName = movieName;
     }
 
-    public void movieSearch() throws IOException {
+    public BaseResultsPage<BaseMovie> movieSearch() throws IOException {
         Call<MovieResultsPage> call = TheMovieDbAPI.getUnauthenticatedInstance().searchService().movie(
                 getMovieName(),
                 null,
@@ -35,6 +38,7 @@ public class MovieServiceImpl implements MovieService{
         );
 
         MovieResultsPage movieResults = call.execute().body();
+        return movieResults;
     }
 
 }

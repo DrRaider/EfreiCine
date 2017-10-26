@@ -1,6 +1,7 @@
 package raider.project.EfreiCine.model;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.google.gson.JsonObject;
 import com.uwetrottmann.tmdb2.Tmdb;
 import com.uwetrottmann.tmdb2.TmdbAuthenticator;
 import com.uwetrottmann.tmdb2.TmdbInterceptor;
@@ -52,8 +53,9 @@ public class TheMovieDbAPI {
                     public void log(String s) {
                         // standard output is easier to read
                         System.out.println(s);
+
                     }
-                });
+                }); 
                 logging.setLevel(HttpLoggingInterceptor.Level.BODY);
                 builder.addInterceptor(logging);
             }

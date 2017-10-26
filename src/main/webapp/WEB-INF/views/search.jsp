@@ -21,7 +21,7 @@
 <header>
     <h3>Search Movies</h3>
 </header>
-<c:url var="searchUrl" value="/search" />
+<c:url var="loginUrl" value="/login" />
 <form action="${searchUrl}" method="post">
     <div class="group">
         <input type="text" id="movie" name="movie"/>
@@ -34,6 +34,21 @@
         <input class="btn btn-primary" type="submit" value="Search"/>
     </div>
 </form>
+<div>
+    <c:if test="${seach_results == null}">
+    <table style="border-collapse: collapse;" border="1" class="showResults">
+        <tr>
+            <td colspan="7">No Results found</td>
+        </tr>
+    </table>
+    </c:if>
+    <c:if test="${seach_results != null}">
+    <table style="border-collapse: collapse;" border="1" class="showResults">
+        <tr>
+            <td colspan="7">Result found</td>
+        </tr>
+    </table>
+    </c:if>
 </body>
 <script>
     $(document).ready(function() {

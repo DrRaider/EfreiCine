@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.uwetrottmann.tmdb2.entities.BaseMovie;
+import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,6 +40,7 @@ public class HelloWorldController {
 
     @Autowired
     MovieService movieService;
+
 
     @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
     public String homePage(ModelMap model) {
@@ -120,16 +123,21 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchPage(String movie) {
+    public String searchPage(ModelMap model) {
+        String movie = null;
+        model.addAttribute("movie", movie);
         return "search";
     }
 
 
     @RequestMapping(value = "/search", method=RequestMethod.POST)
-    public String searchMovie(@RequestParam String movie) throws IOException {
-       movieService.setMovieName(movie);
-       movieService.movieSearch();
-        return "results";
+    public String searchMovie(@RequestParam String movie, ModelMap model) throws IOException {
+        movieService.setMovieName(movie);
+        BaseResultsPage<BaseMovie> searchResults = movieService.movieSearch();
+        System.out.println("search :" +searchResults.page);
+        model.addAttribute("search_results", searchResults);
+
+        return "search";
     }
 
     private String getPrincipal(){
