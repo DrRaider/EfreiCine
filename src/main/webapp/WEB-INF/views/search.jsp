@@ -45,9 +45,8 @@
     </table>
     </c:if>
     <c:if test="${search_results != null}">
-
         <div class="container">
-            <table style="border-collapse: collapse;" border="1" class="showResults" id="table">
+            <table id="table">
                 <thead>
                 <tr>
                     <th data-field="original_title">original_title</th>
@@ -77,6 +76,7 @@
         data: json.results
     });
     // Add https://image.tmdb.org/t/p/w500/ + link provided in json to all poster_path
+    // And add js script to sort table by date (most recent first)
 </script>
 </html>
 
