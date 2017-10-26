@@ -6,6 +6,10 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.text.DateFormat;
+import  java.text.SimpleDateFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.uwetrottmann.tmdb2.entities.BaseMovie;
 import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
@@ -123,22 +127,27 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchPage(ModelMap model) {
-        String movie = null;
-        model.addAttribute("movie", movie);
+    public String searchPage() {
         return "search";
     }
 
 
     @RequestMapping(value = "/search", method=RequestMethod.POST)
-    public String searchMovie(@RequestParam String movie, ModelMap model) throws IOException {
+    public String searchResult(@RequestParam String movie, ModelMap model) throws IOException {
         movieService.setMovieName(movie);
         BaseResultsPage<BaseMovie> searchResults = movieService.movieSearch();
-        System.out.println("search :" +searchResults.page);
-        model.addAttribute("search_results", searchResults);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        mapper.setDateFormat(df);
+        String jsonInString = mapper.writeValueAsString(searchResults);
+           System.out.println("search :" +jsonInString);
+        model.addAttribute("search_results", jsonInString);
 
         return "search";
     }
+
+
 
     private String getPrincipal(){
         String userName;

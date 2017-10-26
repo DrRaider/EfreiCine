@@ -13,14 +13,16 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
           crossorigin="anonymous">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/app.css"/>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script>var json = ${search_results};</script>
 </head>
 <body>
-<header>
+<hgroup>
     <h3>Search Movies</h3>
-</header>
+</hgroup>
 <c:url var="loginUrl" value="/login" />
 <form action="${searchUrl}" method="post">
     <div class="group">
@@ -35,19 +37,28 @@
     </div>
 </form>
 <div>
-    <c:if test="${seach_results == null}">
+    <c:if test="${search_results == null}">
     <table style="border-collapse: collapse;" border="1" class="showResults">
         <tr>
             <td colspan="7">No Results found</td>
         </tr>
     </table>
     </c:if>
-    <c:if test="${seach_results != null}">
-    <table style="border-collapse: collapse;" border="1" class="showResults">
-        <tr>
-            <td colspan="7">Result found</td>
-        </tr>
-    </table>
+    <c:if test="${search_results != null}">
+
+        <div class="container">
+            <table style="border-collapse: collapse;" border="1" class="showResults" id="table">
+                <thead>
+                <tr>
+                    <th data-field="original_title">original_title</th>
+                    <th data-field="overview">overview</th>
+                    <th data-field="release_date">release_date</th>
+                    <th data-field="poster_path">Poster</th>
+
+                </tr>
+                </thead>
+            </table>
+        </div>
     </c:if>
 </body>
 <script>
@@ -59,7 +70,13 @@
             else
                 $this.removeClass('used');
         });
+
     });
+
+    $('#table').bootstrapTable({
+        data: json.results
+    });
+    // Add https://image.tmdb.org/t/p/w500/ + link provided in json to all poster_path
 </script>
 </html>
 
