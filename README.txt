@@ -13,13 +13,6 @@ TODO :
 - proper redirects
 - build rest of the Web Service :^)
 
-24-Oct-2017 21:18:30.636 WARNING [localhost-startStop-2] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesThreads The web application [ROOT] appears to have started a thread named [OkHttp ConnectionPool] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
- java.lang.Object.wait(Native Method)
- okhttp3.ConnectionPool$1.run(ConnectionPool.java:67)
- java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1160)
- java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
- java.lang.Thread.run(Thread.java:795)
-
 DONE :
 - Server up
 - Communicate with MySQL via hibernate
@@ -27,5 +20,5 @@ DONE :
 - Bcryt password encryption
 - Login
 - Register (with unique SSO ID)
-
+- Search
 
