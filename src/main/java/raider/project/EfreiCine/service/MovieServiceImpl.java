@@ -37,8 +37,6 @@ public class MovieServiceImpl implements MovieService{
                 null
         );
 
-        MovieResultsPage movieResults = call.execute().body();
-        return movieResults;
+        return call.execute().body();
     }
-
 }

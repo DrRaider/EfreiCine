@@ -1,11 +1,11 @@
 package raider.project.EfreiCine.model;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.google.gson.JsonObject;
+
 import com.uwetrottmann.tmdb2.Tmdb;
 import com.uwetrottmann.tmdb2.TmdbAuthenticator;
 import com.uwetrottmann.tmdb2.TmdbInterceptor;
-import com.uwetrottmann.tmdb2.entities.MovieResultsPage;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
