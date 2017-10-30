@@ -11,7 +11,8 @@ import javax.persistence.Table;
 @Table(name="USER_PROFILE")
 public class UserProfile {
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
     @Column(name="TYPE", length=15, unique=true, nullable=false)

@@ -25,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.web.bind.annotation.RequestParam;
+import raider.project.EfreiCine.model.Theater;
 import raider.project.EfreiCine.model.User;
 import raider.project.EfreiCine.model.UserProfile;
+import raider.project.EfreiCine.service.TheaterService;
 import raider.project.EfreiCine.service.UserProfileService;
 import raider.project.EfreiCine.service.UserService;
 import raider.project.EfreiCine.service.MovieService;
@@ -45,6 +47,8 @@ public class HelloWorldController {
     @Autowired
     MovieService movieService;
 
+    @Autowired
+    TheaterService theaterService;
 
     @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
     public String homePage(ModelMap model) {
@@ -88,7 +92,9 @@ public class HelloWorldController {
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String newRegistration(ModelMap model) {
         User user = new User();
+        Theater theater = new Theater();
         model.addAttribute("user", user);
+        model.addAttribute("theater", theater);
         return "register";
     }
 
@@ -97,7 +103,7 @@ public class HelloWorldController {
      * also validates the user input
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String saveRegistration(@Valid User user,
+    public String saveRegistration(@Valid User user, @Valid Theater theater,
                                    BindingResult result, ModelMap model) {
 
         if (result.hasErrors()) {
@@ -112,12 +118,16 @@ public class HelloWorldController {
         user.setUserProfiles(profile);
         userService.save(user);
 
+        Set<User> userId = new HashSet<>();
+        theater.setUserTheaters(userId);
+        theaterService.save(theater);
+
         System.out.println("First Name : " + user.getFirstName());
         System.out.println("Last Name : " + user.getLastName());
         System.out.println("SSO ID : " + user.getSsoId());
         System.out.println("Password : " + user.getPassword());
         System.out.println("Email : " + user.getEmail());
-        System.out.println("Checking UsrProfiles....");
+        System.out.println("Checking UserProfiles....");
 
         System.out.println("Email : " + user.getUserProfiles());
 
@@ -127,7 +137,8 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchPage() {
+    public String searchPage(ModelMap model) {
+
         return "search";
     }
 
@@ -141,7 +152,6 @@ public class HelloWorldController {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         mapper.setDateFormat(df);
         String jsonInString = mapper.writeValueAsString(searchResults);
-           System.out.println("search :" +jsonInString);
         model.addAttribute("search_results", jsonInString);
 
         return "search";
@@ -160,6 +170,5 @@ public class HelloWorldController {
         }
         return userName;
     }
-
 
 }

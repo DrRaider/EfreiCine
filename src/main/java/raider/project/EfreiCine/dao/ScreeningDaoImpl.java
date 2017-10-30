@@ -17,7 +17,7 @@ public class ScreeningDaoImpl extends AbstractDao<Integer, Screening> implements
         return getByKey(id);
     }
 
-    public Screening findByTheaterId(String tId) {
+    public Screening findByTheaterId(int tId) {
         Criteria crit = createEntityCriteria();
         crit.add(Restrictions.eq("theaterId", tId));
         return (Screening) crit.uniqueResult();

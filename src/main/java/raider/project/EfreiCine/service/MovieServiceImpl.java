@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import raider.project.EfreiCine.model.TheMovieDbAPI;
 
-@Service
+@Service("movieService")
 @Transactional
 public class MovieServiceImpl implements MovieService{
 

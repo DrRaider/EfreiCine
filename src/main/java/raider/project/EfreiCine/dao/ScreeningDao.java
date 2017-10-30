@@ -7,5 +7,5 @@ public interface ScreeningDao {
 
     Screening findById(int id);
 
-    Screening findByTheaterId(String tId);
+    Screening findByTheaterId(int tId);
 }

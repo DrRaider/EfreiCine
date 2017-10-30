@@ -36,6 +36,12 @@ public class Theater {
     @Column(name = "CITY", nullable = false)
     private String city;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "APP_USER_THEATER",
+            joinColumns = { @JoinColumn(name = "USER_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "THEATER_ID") })
+    private Set<User> userTheaters = new HashSet<>();
+
     public int getId() {
         return id;
     }
@@ -68,6 +74,14 @@ public class Theater {
         this.city = city;
     }
 
+    public Set<User> getUserTheaters() {
+        return userTheaters;
+    }
+
+    public void setUserTheaters(Set<User> userTheaters) {
+        this.userTheaters = userTheaters;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +104,7 @@ public class Theater {
                 ", number=" + number +
                 ", street='" + street + '\'' +
                 ", city='" + city + '\'' +
+                ", userTheaters=" + userTheaters +
                 '}';
     }
 }
