@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import raider.project.EfreiCine.model.Movie;
 
-@Repository("userDao")
+@Repository("movieDao")
 public class MovieDaoImpl extends AbstractDao<Integer, Movie> implements MovieDao {
 
     public void save(Movie movie) {

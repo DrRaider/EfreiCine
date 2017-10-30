@@ -1,0 +1,95 @@
+package raider.project.EfreiCine.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import com.uwetrottmann.tmdb2.entities.BaseMovie;
+import org.hibernate.validator.constraints.NotEmpty;
+
+@Entity
+@Table(name="APP_SCREENING")
+public class Theater {
+
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private int id;
+
+    @NotEmpty
+    @Column(name="NUMBER", nullable = false)
+    private int number;
+
+    @NotEmpty
+    @Column(name = "STREET", nullable = false)
+    private String street;
+
+    @NotEmpty
+    @Column(name = "CITY", nullable = false)
+    private String city;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Theater theater = (Theater) o;
+
+        return id == theater.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Theater{" +
+                "id=" + id +
+                ", number=" + number +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
+}
