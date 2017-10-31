@@ -59,25 +59,25 @@
             </table>
         </div>
     </c:if>
-</body>
-<script>
-    $(document).ready(function() {
-        $('input').blur(function () {
-            var $this = $(this);
-            if ($this.val())
-                $this.addClass('used');
-            else
-                $this.removeClass('used');
+    <script>
+        $(document).ready(function() {
+            $('input').blur(function () {
+                var $this = $(this);
+                if ($this.val())
+                    $this.addClass('used');
+                else
+                    $this.removeClass('used');
+            });
+
         });
 
-    });
-
-    $('#table').bootstrapTable({
-        data: json.results
-    });
-    // Add https://image.tmdb.org/t/p/w500/ + link provided in json to all poster_path
-    // And add js script to sort table by date (most recent first)
-</script>
+        $('#table').bootstrapTable({
+            data: json.results
+        });
+        // Add https://image.tmdb.org/t/p/w500/ + link provided in json to all poster_path
+        // And add js script to sort table by date (most recent first)
+    </script>
+</body>
 </html>
 
 

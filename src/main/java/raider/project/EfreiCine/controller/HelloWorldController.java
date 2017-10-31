@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import raider.project.EfreiCine.model.Theater;
 import raider.project.EfreiCine.model.User;
 import raider.project.EfreiCine.model.UserProfile;
+import raider.project.EfreiCine.model.UserTheater;
 import raider.project.EfreiCine.service.TheaterService;
 import raider.project.EfreiCine.service.UserProfileService;
 import raider.project.EfreiCine.service.UserService;
@@ -91,10 +92,10 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String newRegistration(ModelMap model) {
-        User user = new User();
-        Theater theater = new Theater();
-        model.addAttribute("user", user);
-        model.addAttribute("theater", theater);
+        UserTheater userTheater = new UserTheater();
+        userTheater.setUser(new User());
+        userTheater.setTheater(new Theater());
+        model.addAttribute("userTheater", userTheater);
         return "register";
     }
 
@@ -103,13 +104,18 @@ public class HelloWorldController {
      * also validates the user input
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String saveRegistration(@Valid User user, @Valid Theater theater,
-                                   BindingResult result, ModelMap model) {
+    public String saveRegistration(@Valid UserTheater userTheater,BindingResult result, ModelMap model) {
 
         if (result.hasErrors()) {
             System.out.println("There are errors");
             return "register";
         }
+
+        User user = new User();
+        user = userTheater.getUser();
+        Theater theater = new Theater();
+        theater = userTheater.getTheater();
+
         UserProfile pro = new UserProfile();
         pro.setId(1);
         pro.setType("USER");
@@ -119,7 +125,10 @@ public class HelloWorldController {
         userService.save(user);
 
         Set<User> userId = new HashSet<>();
+        userId.add(user);
+        System.out.println("profile :" + theater);
         theater.setUserTheaters(userId);
+        System.out.println("profile :" + theater);
         theaterService.save(theater);
 
         System.out.println("First Name : " + user.getFirstName());
@@ -129,7 +138,7 @@ public class HelloWorldController {
         System.out.println("Email : " + user.getEmail());
         System.out.println("Checking UserProfiles....");
 
-        System.out.println("Email : " + user.getUserProfiles());
+        System.out.println("UsrProfiles : " + user.getUserProfiles());
 
 
         model.addAttribute("success", "User " + user.getFirstName() + " has been registered successfully");

@@ -14,11 +14,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.uwetrottmann.tmdb2.entities.BaseMovie;
 import org.hibernate.validator.constraints.NotEmpty;
 
+
 @Entity
-@Table(name="APP_SCREENING")
+@Table(name="APP_THEATER")
 public class Theater {
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Theater {
 
     @NotEmpty
     @Column(name="NUMBER", nullable = false)
-    private int number;
+    private String number;
 
     @NotEmpty
     @Column(name = "STREET", nullable = false)
@@ -50,11 +50,11 @@ public class Theater {
         this.id = id;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

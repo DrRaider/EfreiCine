@@ -10,88 +10,91 @@
         <meta name="author" content=""/>
         <link rel="icon" href="../../favicon.ico"/>
         <title>Sign up</title>
-        <link rel="script" href="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
               crossorigin="anonymous">
         <!-- Custom styles for this template-->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/app.css"/>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     </head>
     <body>
-        <header>
+        <hgroup>
         <h3>Sign Up</h3>
-        </header>
-        <form:form method="POST">
+        </hgroup>
+        <%--@elvariable id="userTheater" type="raider.project.EfreiCine.model.UserTheater"--%>
+        <form:form method="POST" modelAttribute="userTheater" class="form-horizontal">
+            <h4>User</h4>
             <div class="group">
-                <form:input required="true" type="text" path="firstName" id="firstName"/>
+                <form:input required="true" type="text" path="user.firstName" id="firstName"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>First Name</label>
                 <div class="has-error">
-                    <form:errors path="firstName" class="help-inline"/>
+                    <form:errors path="user.firstName" class="help-inline"/>
                 </div>
             </div>
             <div class="group">
-                <form:input required="true" type="text" path="lastName" id="lastname"/>
+                <form:input required="true" type="text" path="user.lastName" id="lastname"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Last Name</label>
                 <div class="has-error">
-                    <form:errors path="lastName" class="help-inline"/>
+                    <form:errors path="user.lastName" class="help-inline"/>
                 </div>
             </div>
             <div class="group">
-                <form:input required="true" type="text" path="ssoId" id="ssoID"/>
+                <form:input required="true" type="text" path="user.ssoId" id="ssoID"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>SSO ID</label>
                 <div class="has-error">
-                    <form:errors path="ssoId" class="help-inline"/>
+                    <form:errors path="user.ssoId" class="help-inline"/>
                 </div>
             </div>
             <div class="group">
-                <form:input required="true" type="text" path="password" id="password"/>
+                <form:input required="true" type="text" path="user.password" id="password"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Password</label>
                 <div class="has-error">
-                    <form:errors path="password" class="help-inline"/>
+                    <form:errors path="user.password" class="help-inline"/>
                 </div>
             </div>
             <div class="group">
-                <form:input required="true" type="text" path="email" id="email"/>
+                <form:input required="true" type="text" path="user.email" id="email"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Email</label>
                 <div class="has-error">
-                    <form:errors path="email" class="help-inline"/>
+                    <form:errors path="user.email" class="help-inline"/>
                 </div>
             </div>
+            <h4>Theater</h4>
             <div class="group">
-                <form:input required="true" type="number" path="number" id="number"/>
+                <form:input required="true" type="text" path="theater.number" id="number"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Number</label>
                 <div class="has-error">
-                    <form:errors path="number" class="help-inline"/>
+                    <form:errors path="theater.number" class="help-inline"/>
                 </div>
             </div>
             <div class="group">
-                <form:input required="true" type="text" path="street" id="street"/>
+                <form:input required="true" type="text" path="theater.street" id="street"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>Street</label>
                 <div class="has-error">
-                    <form:errors path="street" class="help-inline"/>
+                    <form:errors path="theater.street" class="help-inline"/>
                 </div>
             </div>
             <div class="group">
-                <form:input required="true" type="text" path="city" id="city"/>
+                <form:input required="true" type="text" path="theater.city" id="city"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <label>City</label>
                 <div class="has-error">
-                    <form:errors path="city" class="help-inline"/>
+                    <form:errors path="theater.city" class="help-inline"/>
                 </div>
             </div>
             <div class="form-actions">
@@ -106,7 +109,7 @@
                 if ($this.val())
                     $this.addClass('used');
                 else
-                    $this.removeClass('used');  
+                    $this.removeClass('used');
             });
         });
     </script>
