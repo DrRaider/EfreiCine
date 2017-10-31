@@ -12,7 +12,7 @@
     <title>Sign up</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-          crossorigin="anonymous">
+          crossorigin="anonloginymous">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
     <!-- Custom styles for this template-->
@@ -23,7 +23,7 @@
 <hgroup>
     <h3>Search Movies</h3>
 </hgroup>
-<c:url var="loginUrl" value="/login" />
+<c:url var="searchUrl" value="/search" />
 <form action="${searchUrl}" method="post">
     <div class="group">
         <input type="text" id="movie" name="movie"/>
