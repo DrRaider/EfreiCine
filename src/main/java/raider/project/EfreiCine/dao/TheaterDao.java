@@ -1,10 +1,9 @@
 package raider.project.EfreiCine.dao;
 
+import org.springframework.stereotype.Repository;
 import raider.project.EfreiCine.model.Theater;
 
-public interface TheaterDao {
+@Repository("theaterDao")
+public class TheaterDao extends AbstractDao<Theater> {
 
-    void save(Theater theater);
-
-    Theater findById(int id);
 }

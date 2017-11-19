@@ -26,7 +26,7 @@ public abstract class AbstractDao<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T getByKey(int key) {
+    public T findById(int key) {
         return (T) getSession().get(persistentClass, key);
     }
 
@@ -37,7 +37,7 @@ public abstract class AbstractDao<T> {
                 .uniqueResult() != null;
     }
 
-    public void persist(T entity) {
+    public void save(T entity) {
         getSession().persist(entity);
     }
 

@@ -1,13 +1,17 @@
 package raider.project.EfreiCine.dao;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 import raider.project.EfreiCine.model.User;
 
-public interface UserDao {
+@Repository("userDao")
+public class UserDao extends AbstractDao<User> {
 
-    void save(User user);
-
-    User findById(int id);
-
-    User findBySSO(String sso);
+    public User findBySSO(String sso) {
+        Criteria crit = createEntityCriteria();
+        crit.add(Restrictions.eq("ssoId", sso));
+        return (User) crit.uniqueResult();
+    }
 
 }

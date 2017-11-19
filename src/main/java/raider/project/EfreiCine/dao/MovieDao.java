@@ -1,13 +1,9 @@
 package raider.project.EfreiCine.dao;
 
+import org.springframework.stereotype.Repository;
 import raider.project.EfreiCine.model.Movie;
 
-public interface MovieDao {
-
-    void save(Movie movie);
-
-    Movie findById(int id);
-
-    boolean exists(int id);
+@Repository("movieDao")
+public class MovieDao extends AbstractDao<Movie> {
 
 }
