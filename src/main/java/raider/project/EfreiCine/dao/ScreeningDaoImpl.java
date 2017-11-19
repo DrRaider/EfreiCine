@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import raider.project.EfreiCine.model.Screening;
 
 @Repository("screeningDao")
-public class ScreeningDaoImpl extends AbstractDao<Integer, Screening> implements ScreeningDao {
+public class ScreeningDaoImpl extends AbstractDao<Screening> implements ScreeningDao {
 
     public void save(Screening screening) {
         persist(screening);

@@ -1,21 +1,21 @@
 package raider.project.EfreiCine.dao;
 
-import java.io.Serializable;
-
 import java.lang.reflect.ParameterizedType;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractDao<PK extends Serializable, T> {
+public abstract class AbstractDao<T> {
 
     private final Class<T> persistentClass;
 
     @SuppressWarnings("unchecked")
     public AbstractDao(){
-        this.persistentClass =(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        this.persistentClass =(Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     @Autowired
@@ -26,8 +26,15 @@ public abstract class AbstractDao<PK extends Serializable, T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T getByKey(PK key) {
+    public T getByKey(int key) {
         return (T) getSession().get(persistentClass, key);
+    }
+
+    public boolean exists(int key) {
+        return createEntityCriteria()
+                .add(Restrictions.idEq(key))
+                .setProjection(Projections.id())
+                .uniqueResult() != null;
     }
 
     public void persist(T entity) {

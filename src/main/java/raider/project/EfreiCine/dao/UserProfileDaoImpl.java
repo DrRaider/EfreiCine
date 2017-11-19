@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import raider.project.EfreiCine.model.UserProfile;
 
 @Repository("userProfileDao")
-public class UserProfileDaoImpl extends AbstractDao<Integer, UserProfile>implements UserProfileDao{
+public class UserProfileDaoImpl extends AbstractDao<UserProfile> implements UserProfileDao{
 
     @SuppressWarnings("unchecked")
     public List<UserProfile> findAll(){

@@ -1,13 +1,11 @@
 package raider.project.EfreiCine.dao;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import raider.project.EfreiCine.model.Movie;
 
 @Repository("movieDao")
-public class MovieDaoImpl extends AbstractDao<Integer, Movie> implements MovieDao {
+public class MovieDaoImpl extends AbstractDao<Movie> implements MovieDao {
 
     public void save(Movie movie) {
         persist(movie);
@@ -17,11 +15,7 @@ public class MovieDaoImpl extends AbstractDao<Integer, Movie> implements MovieDa
         return getByKey(id);
     }
 
-    public Movie findByMovieId(String mId) {
-        Criteria crit = createEntityCriteria();
-        crit.add(Restrictions.eq("movieId", mId));
-        return (Movie) crit.uniqueResult();
+    public boolean exists(int id) {
+        return super.exists(id);
     }
-
-
 }

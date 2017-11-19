@@ -6,6 +6,8 @@ import com.uwetrottmann.tmdb2.Tmdb;
 import com.uwetrottmann.tmdb2.TmdbAuthenticator;
 import com.uwetrottmann.tmdb2.TmdbInterceptor;
 
+import com.uwetrottmann.tmdb2.entities.BaseMovie;
+import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -28,6 +30,43 @@ public class TheMovieDbAPI {
 
     protected static Tmdb getAuthenticatedInstance() {
         return authenticatedInstance;
+    }
+
+    public static BaseResultsPage<BaseMovie> searchMovie(String movieName) throws IOException {
+        return TheMovieDbAPI.getUnauthenticatedInstance().searchService().movie(
+                movieName,
+                null,
+                null,
+                false,
+                null,
+                null,
+                null
+        ).execute().body();
+    }
+
+    public static Movie retrieveMovieData(int movieId) throws IOException {
+        com.uwetrottmann.tmdb2.entities.Movie raw = TheMovieDbAPI
+                .getUnauthenticatedInstance()
+                .moviesService()
+                .summary(movieId)
+                .execute().body();
+
+        Movie movie = new Movie();
+        movie.setBackdropPath(raw.backdrop_path);
+        movie.setBudget(raw.budget);
+        //TODO: movie.setCast();
+        //TODO: movie.setDirector();
+        movie.setId(raw.id);
+        movie.setOriginalTitle(raw.original_title);
+        movie.setOverview(raw.overview);
+        movie.setPosterPath(raw.poster_path);
+        //TODO: movie.setProducer();
+        movie.setReleaseDate(raw.release_date);
+        movie.setRuntime(raw.runtime);
+        movie.setVoteAverage(raw.vote_average);
+        movie.setVoteCount(raw.vote_count);
+
+        return movie;
     }
 
     private static class TestTmdb extends Tmdb {

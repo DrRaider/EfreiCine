@@ -12,16 +12,16 @@ import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.Date;
+
 @Entity
 @Table(name="APP_MOVIE")
 public class Movie {
 
+    public static final String IMG_PATH_PREFIX = "http://image.tmdb.org/t/p/w500";
+
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-
-    @NotEmpty
-    @Column(name="MOVIE_ID", nullable = false)
-    private Integer movieId;
 
     @NotEmpty
     @Column(name="ORIGINAL_TITLE", nullable = false)
@@ -32,12 +32,16 @@ public class Movie {
     private String backdropPath;
 
     @NotEmpty
+    @Column(name="POSTER_PATH", nullable = false)
+    private String posterPath;
+
+    @NotEmpty
     @Column(name = "OVERVIEW", nullable = false)
     private String overview;
 
     @NotEmpty
     @Column(name = "RELEASE_DATE", nullable = false)
-    private String releaseDate;
+    private Date releaseDate;
 
     @NotEmpty
     @Column(name = "BUDGET", nullable = false)
@@ -75,14 +79,6 @@ public class Movie {
         this.id = id;
     }
 
-    public Integer getMovieId() {
-        return movieId;
-    }
-
-    public void setMovieId(Integer movieId) {
-        this.movieId = movieId;
-    }
-
     public String getOriginalTitle() {
         return originalTitle;
     }
@@ -99,6 +95,14 @@ public class Movie {
         this.backdropPath = backdropPath;
     }
 
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
     public String getOverview() {
         return overview;
     }
@@ -107,11 +111,11 @@ public class Movie {
         this.overview = overview;
     }
 
-    public String getReleaseDate() {
+    public Date getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(String releaseDate) {
+    public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -178,21 +182,21 @@ public class Movie {
 
         Movie movie = (Movie) o;
 
-        return movieId.equals(movie.movieId);
+        return id == movie.id;
     }
 
     @Override
     public int hashCode() {
-        return movieId.hashCode();
+        return id;
     }
 
     @Override
     public String toString() {
         return "Movie{" +
                 "id=" + id +
-                ", movieId=" + movieId +
                 ", originalTitle='" + originalTitle + '\'' +
                 ", backdropPath='" + backdropPath + '\'' +
+                ", posterPath='" + posterPath + '\'' +
                 ", overview='" + overview + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", budget=" + budget +

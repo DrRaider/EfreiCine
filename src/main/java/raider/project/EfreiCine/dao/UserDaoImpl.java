@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import raider.project.EfreiCine.model.User;
 
 @Repository("userDao")
-public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
+public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     public void save(User user) {
         persist(user);

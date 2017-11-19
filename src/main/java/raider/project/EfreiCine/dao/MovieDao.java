@@ -8,6 +8,6 @@ public interface MovieDao {
 
     Movie findById(int id);
 
-    Movie findByMovieId(String mId);
+    boolean exists(int id);
 
 }

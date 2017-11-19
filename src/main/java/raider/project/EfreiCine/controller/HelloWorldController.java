@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.web.bind.annotation.RequestParam;
-import raider.project.EfreiCine.model.Theater;
-import raider.project.EfreiCine.model.User;
-import raider.project.EfreiCine.model.UserProfile;
-import raider.project.EfreiCine.model.UserTheater;
+import raider.project.EfreiCine.model.*;
 import raider.project.EfreiCine.service.TheaterService;
 import raider.project.EfreiCine.service.UserProfileService;
 import raider.project.EfreiCine.service.UserService;
@@ -154,8 +151,11 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/search", method=RequestMethod.POST)
     public String searchResult(@RequestParam String movie, ModelMap model) throws IOException {
-        movieService.setMovieName(movie);
-        BaseResultsPage<BaseMovie> searchResults = movieService.movieSearch();
+        BaseResultsPage<BaseMovie> searchResults = TheMovieDbAPI.searchMovie(movie);
+        for(BaseMovie m: searchResults.results) {
+            m.backdrop_path = Movie.IMG_PATH_PREFIX + m.backdrop_path;
+            m.poster_path = Movie.IMG_PATH_PREFIX + m.poster_path;
+        }
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");

@@ -33,19 +33,19 @@ create table APP_THEATER(
 
 /* APP_MOVIE table contains all movies' info */
 create table APP_MOVIE(
-  id BIGINT NOT NULL AUTO_INCREMENT,
-  movie_id VARCHAR(30) NOT NULL,
+  id INT NOT NULL,
   original_title VARCHAR(30) NOT NULL,
   backdrop_path VARCHAR(30) NOT NULL,
+  poster_path VARCHAR(30) NOT NULL,
   overview VARCHAR(1500) NOT NULL,
-  release_date VARCHAR(30) NOT NULL,
-  budget VARCHAR(30) NOT NULL,
-  runtime VARCHAR(30) NOT NULL,
+  release_date DATE NOT NULL,
+  budget INT NOT NULL,
+  runtime INT NOT NULL,
   cast VARCHAR(30) NOT NULL,
   director VARCHAR(30) NOT NULL,
   producer VARCHAR(30) NOT NULL,
-  vote_average VARCHAR(30) NOT NULL,
-  vote_count VARCHAR(30) NOT NULL,
+  vote_average Double NOT NULL,
+  vote_count BIGINT NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE APP_USER_THEATER (
 /* APP_SCREENING table contains all possible roles */
 create table APP_SCREENING(
   id BIGINT NOT NULL AUTO_INCREMENT,
-  movie_id BIGINT NOT NULL,
+  movie_id INT NOT NULL,
   theater_id BIGINT NOT NULL,
   start_date VARCHAR(30) NOT NULL,
   end_state VARCHAR(30) NOT NULL,

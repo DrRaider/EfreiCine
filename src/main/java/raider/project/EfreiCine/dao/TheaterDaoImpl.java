@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import raider.project.EfreiCine.model.Theater;
 
 @Repository("theaterDao")
-public class TheaterDaoImpl extends AbstractDao<Integer, Theater> implements TheaterDao {
+public class TheaterDaoImpl extends AbstractDao<Theater> implements TheaterDao {
 
     public void save(Theater theater) {
         persist(theater);
