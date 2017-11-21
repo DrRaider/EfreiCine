@@ -51,16 +51,22 @@ public class TheMovieDbAPI {
                 .summary(movieId)
                 .execute().body();
 
+        com.uwetrottmann.tmdb2.entities.Credits credits = TheMovieDbAPI
+                .getUnauthenticatedInstance()
+                .moviesService()
+                .credits(movieId)
+                .execute().body();
+
         Movie movie = new Movie();
         movie.setBackdropPath(raw.backdrop_path);
         movie.setBudget(raw.budget);
-        //TODO: movie.setCast();
-        //TODO: movie.setDirector();
+        //TODO:movie.setCast(); using credits.cast
+        //TODO: movie.setDirector(); using credits.crew
         movie.setId(raw.id);
         movie.setOriginalTitle(raw.original_title);
         movie.setOverview(raw.overview);
         movie.setPosterPath(raw.poster_path);
-        //TODO: movie.setProducer();
+        //TODO: movie.setProducer(); using credits.crew
         movie.setReleaseDate(raw.release_date);
         movie.setRuntime(raw.runtime);
         movie.setVoteAverage(raw.vote_average);
