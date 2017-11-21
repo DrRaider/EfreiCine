@@ -8,11 +8,15 @@ import com.uwetrottmann.tmdb2.TmdbInterceptor;
 
 import com.uwetrottmann.tmdb2.entities.BaseMovie;
 import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
+import com.uwetrottmann.tmdb2.entities.CastMember;
+import com.uwetrottmann.tmdb2.entities.CrewMember;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 import java.io.IOException;
+import java.util.Objects;
+
 public class TheMovieDbAPI {
 
     private static final boolean PRINT_REQUESTS = true;
@@ -58,15 +62,46 @@ public class TheMovieDbAPI {
                 .execute().body();
 
         Movie movie = new Movie();
+        assert raw != null;
         movie.setBackdropPath(raw.backdrop_path);
         movie.setBudget(raw.budget);
-        //TODO:movie.setCast(); using credits.cast
-        //TODO: movie.setDirector(); using credits.crew
+
+        StringBuilder cast = new StringBuilder();
+        assert credits != null;
+        for(CastMember ca : credits.cast) {
+            if (ca.order == 1)
+                cast.append(ca.name);
+            if (ca.order == 2 || ca.order == 3)
+                cast.append(", ").append(ca.name);
+        }
+        movie.setCast(cast.toString());
+
+        StringBuilder director = new StringBuilder();
+        StringBuilder producer = new StringBuilder();
+        boolean cnt1 = false;
+        boolean cnt2 = false;
+        for(CrewMember cr : credits.crew) {
+            if (Objects.equals(cr.job, "Director") && !cnt1) {
+                director.append(cr.name);
+                cnt1 = true;
+            }
+            if(Objects.equals(cr.job, "Director") && cnt1)
+                director.append(", ").append(cr.name);
+
+            if (Objects.equals(cr.job, "Producer") && !cnt2) {
+                producer.append(cr.name);
+                cnt2 = true;
+            }
+            if(Objects.equals(cr.job, "Producer") && cnt2)
+                producer.append(", ").append(cr.name);
+        }
+        movie.setDirector(director.toString());
+        movie.setProducer(producer.toString());
+
         movie.setId(raw.id);
         movie.setOriginalTitle(raw.original_title);
         movie.setOverview(raw.overview);
         movie.setPosterPath(raw.poster_path);
-        //TODO: movie.setProducer(); using credits.crew
         movie.setReleaseDate(raw.release_date);
         movie.setRuntime(raw.runtime);
         movie.setVoteAverage(raw.vote_average);
