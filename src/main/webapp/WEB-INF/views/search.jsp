@@ -26,7 +26,7 @@
 <c:url var="searchUrl" value="/search" />
 <form action="${searchUrl}" method="post">
     <div class="group">
-        <input type="text" id="movie" name="movie"/>
+        <input type="text" id="movie" name="movie" required="true"/>
         <span class="highlight"></span>
         <span class="bar"></span>
         <label>Movie Title</label>
@@ -46,13 +46,14 @@
     </c:if>
     <c:if test="${search_results != null}">
         <div class="container">
-            <table id="table">
+                <table id="table">
                 <thead>
                 <tr>
-                    <th data-field="original_title">original_title</th>
-                    <th data-field="overview">overview</th>
-                    <th data-field="release_date">release_date</th>
-                    <th data-field="poster_path">Poster</th>
+                    <th data-field="id" data-formatter="LinkFormatter"></th>
+                    <th data-field="original_title"     data-sortable="true">Original title</th>
+                    <th data-field="overview">Overview</th>
+                    <th data-field="release_date" data-sortable="true">Release date</th>
+                    <th data-field="poster_path" data-formatter="ImgFormatter">Poster</th>
 
                 </tr>
                 </thead>
@@ -69,12 +70,28 @@
                     $this.removeClass('used');
             });
 
+
+            $('#table tr').click(function() {
+                var href = $(this).find("a").attr("href");
+                if(href) {
+                    window.location = href;
+                }
+            });
+
+
         });
 
         $('#table').bootstrapTable({
             data: json.results
         });
-        // Add https://image.tmdb.org/t/p/w500/ + link provided in json to all poster_path
+
+        function ImgFormatter(value, row, index) {
+            return "<img src='"+value+"' height=\"278\" width=\"185\"/>";
+        }
+
+        function LinkFormatter(value, row, index) {
+            return "<a href='../movie/"+value+"'/>";
+        }
         // And add js script to sort table by date (most recent first)
     </script>
 </body>

@@ -3,6 +3,7 @@ package raider.project.EfreiCine.controller;
 import java.io.IOException;
 import java.util.*;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -31,6 +33,7 @@ import raider.project.EfreiCine.service.UserProfileService;
 import raider.project.EfreiCine.service.UserService;
 import raider.project.EfreiCine.service.MovieService;
 
+import static raider.project.EfreiCine.model.TheMovieDbAPI.retrieveMovieData;
 
 
 @Controller
@@ -85,7 +88,6 @@ public class HelloWorldController {
         }
         return "redirect:/login?logout";
     }
-
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String newRegistration(ModelMap model) {
@@ -148,7 +150,6 @@ public class HelloWorldController {
         return "search";
     }
 
-
     @RequestMapping(value = "/search", method=RequestMethod.POST)
     public String searchResult(@RequestParam String movie, ModelMap model) throws IOException {
         BaseResultsPage<BaseMovie> searchResults = TheMovieDbAPI.searchMovie(movie);
@@ -166,7 +167,15 @@ public class HelloWorldController {
         return "search";
     }
 
-
+    @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
+    public String getScreenings(@PathVariable("id") int id, ModelMap model) throws IOException {
+        System.out.println(id);
+        Movie myMovie = TheMovieDbAPI.retrieveMovieData(id);
+        //add path to img
+        //Add screening data on the page and push it on POST :)
+        model.addAttribute("movie", myMovie);
+        return "/movie";
+    }
 
     private String getPrincipal(){
         String userName;
