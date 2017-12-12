@@ -3,7 +3,6 @@ package raider.project.EfreiCine.controller;
 import java.io.IOException;
 import java.util.*;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -28,12 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.web.bind.annotation.RequestParam;
 import raider.project.EfreiCine.model.*;
-import raider.project.EfreiCine.service.TheaterService;
-import raider.project.EfreiCine.service.UserProfileService;
-import raider.project.EfreiCine.service.UserService;
-import raider.project.EfreiCine.service.MovieService;
-
-import static raider.project.EfreiCine.model.TheMovieDbAPI.retrieveMovieData;
+import raider.project.EfreiCine.service.*;
 
 
 @Controller
@@ -50,6 +44,15 @@ public class HelloWorldController {
 
     @Autowired
     TheaterService theaterService;
+
+    @Autowired
+    ScreeningService screeningService;
+
+    @Autowired
+    SessionService sessionService;
+
+    @Autowired
+    UserTheaterService userTheaterService;
 
     @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
     public String homePage(ModelMap model) {
@@ -91,7 +94,7 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String newRegistration(ModelMap model) {
-        UserTheater userTheater = new UserTheater();
+        ConcatUserTheater userTheater = new ConcatUserTheater();
         userTheater.setUser(new User());
         userTheater.setTheater(new Theater());
         model.addAttribute("userTheater", userTheater);
@@ -103,7 +106,7 @@ public class HelloWorldController {
      * also validates the user input
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String saveRegistration(@Valid UserTheater userTheater,BindingResult result, ModelMap model) {
+    public String saveRegistration(@Valid ConcatUserTheater userTheater,BindingResult result, ModelMap model) {
 
         if (result.hasErrors()) {
             System.out.println("There are errors");
@@ -129,6 +132,11 @@ public class HelloWorldController {
         theater.setUserTheaters(userId);
         System.out.println("profile :" + theater);
         theaterService.save(theater);
+
+        UserTheater linkedId = new UserTheater();
+        linkedId.setUserId(user.getId());
+        linkedId.setTheaterId(theater.getId());
+        userTheaterService.save(linkedId);
 
         System.out.println("First Name : " + user.getFirstName());
         System.out.println("Last Name : " + user.getLastName());
@@ -169,12 +177,53 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String getScreenings(@PathVariable("id") int id, ModelMap model) throws IOException {
-        System.out.println(id);
         Movie myMovie = TheMovieDbAPI.retrieveMovieData(id);
-        //add path to img
+        myMovie.setBackdropPath(Movie.IMG_PATH_PREFIX + myMovie.getBackdropPath());
+        myMovie.setPosterPath(Movie.IMG_PATH_PREFIX + myMovie.getPosterPath());
+
         //Add screening data on the page and push it on POST :)
+        ScreeningSession screeningSession = new ScreeningSession();
+        screeningSession.setScreening(new Screening());
+        screeningSession.setSession(new Session());
+
+        model.addAttribute("screeningSession", screeningSession);
         model.addAttribute("movie", myMovie);
+        model.addAttribute(
+                "theater",
+                userTheaterService.findByUserId(
+                        userService.findBySso(
+                                getPrincipal()
+                        ).getId()
+                )
+        );
         return "/movie";
+    }
+
+    @RequestMapping(value = "/movie/{id}", method = RequestMethod.POST)
+    public String saveRegistration(@Valid ScreeningSession screeningSession, BindingResult result, ModelMap model) {
+
+        if (result.hasErrors()) {
+            System.out.println("There are errors");
+            return "movie";
+        }
+        Screening screening = screeningSession.getScreening();
+        Session session = screeningSession.getSession();
+
+        Screening test =  screeningService.getByTheaterAndMovie(screening.getTheaterId(), screening.getMovieId());
+        if (null == test) {
+            screeningService.save(screening);
+        }
+        else {
+            screening.setId(test.getId());
+        }
+
+        if (sessionService.countSessionByScreeningId(screening.getId()) <= 3){
+            session.setScreeningId(screening.getId());
+            sessionService.save(session);
+        }
+
+
+        return "movie";
     }
 
     private String getPrincipal(){

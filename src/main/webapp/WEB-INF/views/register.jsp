@@ -21,7 +21,7 @@
         <hgroup>
         <h3>Sign Up</h3>
         </hgroup>
-        <%--@elvariable id="userTheater" type="raider.project.EfreiCine.model.UserTheater"--%>
+        <%--@elvariable id="userTheater" type="raider.project.EfreiCine.model.ConcatUserTheater"--%>
         <form:form method="POST" modelAttribute="userTheater" class="form-horizontal">
             <h4>User</h4>
             <div class="group">

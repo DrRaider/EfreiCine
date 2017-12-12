@@ -18,8 +18,8 @@ public class ScreeningServiceImpl implements ScreeningService {
         return dao.findById(id);
     }
 
-    public Screening getScreeningByTheater(int theaterId) {
-        return dao.findByTheaterId(theaterId);
+    public Screening getByTheaterAndMovie(int theaterId, int movieId) {
+        return dao.findByTheaterAndMovie(theaterId, movieId);
     }
 
     public void save(Screening screening) {

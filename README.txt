@@ -9,9 +9,8 @@ Thanks for those ;)
 Use script.sql to generate and populate your database (it produces one admin with 'sam as id and 'abc125' as password.)
 
 TODO :
-- proper html/jsp editing
-- proper redirects
-- build rest of the Web Service :^)
+- session.get -> print already registered sessions and error message if > 3 and delete/update
+
 
 DONE :
 - Server up

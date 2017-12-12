@@ -69,30 +69,31 @@
                 else
                     $this.removeClass('used');
             });
-
-
             $('#table tr').click(function() {
                 var href = $(this).find("a").attr("href");
                 if(href) {
                     window.location = href;
                 }
             });
-
-
         });
 
         $('#table').bootstrapTable({
             data: json.results
         });
 
+        /**
+        * @return {string}
+        */
         function ImgFormatter(value, row, index) {
             return "<img src='"+value+"' height=\"278\" width=\"185\"/>";
         }
 
+        /**
+        * @return {string}
+        */
         function LinkFormatter(value, row, index) {
             return "<a href='../movie/"+value+"'/>";
         }
-        // And add js script to sort table by date (most recent first)
     </script>
 </body>
 </html>

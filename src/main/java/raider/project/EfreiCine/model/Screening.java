@@ -35,10 +35,6 @@ public class Screening {
     private String endDate;
 
     @NotEmpty
-    @Column(name = "DAYS", nullable = false)
-    private String days;
-
-    @NotEmpty
     @Column(name = "AGE_LIMIT", nullable = false)
     private int ageLimit;
 
@@ -83,14 +79,6 @@ public class Screening {
         this.endDate = endDate;
     }
 
-    public String getDays() {
-        return days;
-    }
-
-    public void setDays(String days) {
-        this.days = days;
-    }
-
     public int getAgeLimit() {
         return ageLimit;
     }
@@ -122,7 +110,6 @@ public class Screening {
                 ", theaterId=" + theaterId +
                 ", startDate='" + startDate + '\'' +
                 ", endDate='" + endDate + '\'' +
-                ", days='" + days + '\'' +
                 ", ageLimit='" + ageLimit + '\'' +
                 '}';
     }
