@@ -1,17 +1,8 @@
 package raider.project.EfreiCine.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import javax.persistence.Table;
-
-
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
-
 import java.util.Date;
 
 @Entity
@@ -20,34 +11,39 @@ public class Movie {
 
     public static final String IMG_PATH_PREFIX = "http://image.tmdb.org/t/p/w500";
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotNull
+    @Column(name = "TMDB_ID", unique=true, nullable = false)
+    private int tmdbId;
+
     @NotEmpty
-    @Column(name="ORIGINAL_TITLE", nullable = false)
+    @Column(name = "ORIGINAL_TITLE", nullable = false)
     private String originalTitle;
 
     @NotEmpty
-    @Column(name="BACKDROP_PATH", nullable = false)
+    @Column(name = "BACKDROP_PATH", nullable = false)
     private String backdropPath;
 
     @NotEmpty
-    @Column(name="POSTER_PATH", nullable = false)
+    @Column(name = "POSTER_PATH", nullable = false)
     private String posterPath;
 
     @NotEmpty
     @Column(name = "OVERVIEW", nullable = false)
     private String overview;
 
-    @NotEmpty
+    @Temporal(TemporalType.DATE)
     @Column(name = "RELEASE_DATE", nullable = false)
     private Date releaseDate;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "BUDGET", nullable = false)
     private Integer budget;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "RUNTIME", nullable = false)
     private Integer runtime;
 
@@ -63,11 +59,11 @@ public class Movie {
     @Column(name = "PRODUCER", nullable = false)
     private String producer;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "VOTE_AVERAGE", nullable = false)
     private Double voteAverage;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "VOTE_COUNT", nullable = false)
     private Integer voteCount;
 
@@ -175,6 +171,14 @@ public class Movie {
         this.voteCount = voteCount;
     }
 
+    public int getTmdbId() {
+        return tmdbId;
+    }
+
+    public void setTmdbId(int tmdbId) {
+        this.tmdbId = tmdbId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -182,30 +186,58 @@ public class Movie {
 
         Movie movie = (Movie) o;
 
-        return id == movie.id;
+        if (id != movie.id) return false;
+        if (tmdbId != movie.tmdbId) return false;
+        if (!originalTitle.equals(movie.originalTitle)) return false;
+        if (!backdropPath.equals(movie.backdropPath)) return false;
+        if (!posterPath.equals(movie.posterPath)) return false;
+        if (!overview.equals(movie.overview)) return false;
+        if (!releaseDate.equals(movie.releaseDate)) return false;
+        if (!budget.equals(movie.budget)) return false;
+        if (!runtime.equals(movie.runtime)) return false;
+        if (!cast.equals(movie.cast)) return false;
+        if (!director.equals(movie.director)) return false;
+        if (!producer.equals(movie.producer)) return false;
+        if (!voteAverage.equals(movie.voteAverage)) return false;
+        return voteCount.equals(movie.voteCount);
     }
 
     @Override
     public int hashCode() {
-        return id;
+        int result = id;
+        result = 31 * result + tmdbId;
+        result = 31 * result + originalTitle.hashCode();
+        result = 31 * result + backdropPath.hashCode();
+        result = 31 * result + posterPath.hashCode();
+        result = 31 * result + overview.hashCode();
+        result = 31 * result + releaseDate.hashCode();
+        result = 31 * result + budget.hashCode();
+        result = 31 * result + runtime.hashCode();
+        result = 31 * result + cast.hashCode();
+        result = 31 * result + director.hashCode();
+        result = 31 * result + producer.hashCode();
+        result = 31 * result + voteAverage.hashCode();
+        result = 31 * result + voteCount.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
         return "Movie{" +
                 "id=" + id +
+                ", tmdbId=" + tmdbId +
                 ", originalTitle='" + originalTitle + '\'' +
                 ", backdropPath='" + backdropPath + '\'' +
                 ", posterPath='" + posterPath + '\'' +
                 ", overview='" + overview + '\'' +
-                ", releaseDate='" + releaseDate + '\'' +
+                ", releaseDate=" + releaseDate +
                 ", budget=" + budget +
                 ", runtime=" + runtime +
                 ", cast='" + cast + '\'' +
                 ", director='" + director + '\'' +
                 ", producer='" + producer + '\'' +
-                ", voteAverage='" + voteAverage + '\'' +
-                ", voteCount='" + voteCount + '\'' +
+                ", voteAverage=" + voteAverage +
+                ", voteCount=" + voteCount +
                 '}';
     }
 }

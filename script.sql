@@ -34,20 +34,22 @@ create table APP_THEATER(
 
 /* APP_MOVIE table contains all movies' info */
 create table APP_MOVIE(
-  id INT NOT NULL,
-  original_title VARCHAR(30) NOT NULL,
-  backdrop_path VARCHAR(30) NOT NULL,
-  poster_path VARCHAR(30) NOT NULL,
+  id INT NOT NULL AUTO_INCREMENT,
+  tmdb_id INT NOT NULL,
+  original_title VARCHAR(300) NOT NULL,
+  backdrop_path VARCHAR(300) NOT NULL,
+  poster_path VARCHAR(300) NOT NULL,
   overview VARCHAR(1500) NOT NULL,
   release_date DATE NOT NULL,
   budget INT NOT NULL,
   runtime INT NOT NULL,
-  cast VARCHAR(30) NOT NULL,
-  director VARCHAR(30) NOT NULL,
-  producer VARCHAR(30) NOT NULL,
+  cast VARCHAR(300) NOT NULL,
+  director VARCHAR(300) NOT NULL,
+  producer VARCHAR(300) NOT NULL,
   vote_average Double NOT NULL,
   vote_count BIGINT NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE (tmdb_id)
 );
 
 
@@ -76,10 +78,10 @@ CREATE TABLE APP_SCREENING(
   movie_id INT NOT NULL,
   theater_id BIGINT NOT NULL,
   start_date VARCHAR(30) NOT NULL,
-  end_state VARCHAR(30) NOT NULL,
+  end_date VARCHAR(30) NOT NULL,
   age_limit VARCHAR(30) NOT NULL,
   PRIMARY KEY (id, movie_id, theater_id),
-  CONSTRAINT FK_APP_MOVIE FOREIGN KEY (movie_id) REFERENCES APP_MOVIE (id),
+  CONSTRAINT FK_APP_MOVIE FOREIGN KEY (movie_id) REFERENCES APP_MOVIE (tmdb_id),
   CONSTRAINT FK_USER_THEATER2 FOREIGN KEY (theater_id) REFERENCES APP_THEATER (id)
 );
 

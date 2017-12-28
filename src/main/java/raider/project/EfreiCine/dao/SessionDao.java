@@ -9,10 +9,12 @@ import raider.project.EfreiCine.model.Session;
 @Repository("sessionDao")
 public class SessionDao extends AbstractDao<Session>{
 
-    public int countByScreeningId(int sId) {
-        Criteria crit = createEntityCriteria();
-        crit.add(Restrictions.eq("screeningId", sId));
-        crit.setProjection(Projections.rowCount());
-        return (int) crit.uniqueResult();
+    public long countByScreeningId(int sId) {
+        Criteria crit = createEntityCriteria()
+            .add(Restrictions.eq("screeningId", sId))
+            .setProjection(Projections.rowCount());
+
+        return (long) crit.uniqueResult();
+
     }
 }

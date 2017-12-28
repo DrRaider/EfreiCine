@@ -1,23 +1,22 @@
 package raider.project.EfreiCine.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.sql.Time;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="APP_SCREENING")
+@Table(name="APP_SESSION")
 public class Session {
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty
+    @NotNull
     @Column(name="SCREENING_ID", nullable = false)
     private int screeningId;
 
@@ -25,9 +24,10 @@ public class Session {
     @Column(name = "DAY", nullable = false)
     private String day;
 
-    @NotEmpty
+    @Temporal(TemporalType.TIME)
     @Column(name = "HOUR", nullable = false)
-    private Time hour;
+    private Date hour;
+
 
     public int getId() {
         return id;
@@ -53,11 +53,11 @@ public class Session {
         this.day = day;
     }
 
-    public Time getHour() {
+    public Date getHour() {
         return hour;
     }
 
-    public void setHour(Time hour) {
+    public void setHour(Date hour) {
         this.hour = hour;
     }
 
@@ -70,8 +70,7 @@ public class Session {
 
         if (id != session.id) return false;
         if (screeningId != session.screeningId) return false;
-        if (day != null ? !day.equals(session.day) : session.day != null) return false;
-        return hour != null ? hour.equals(session.hour) : session.hour == null;
+        return (day != null ? day.equals(session.day) : session.day == null) && (hour != null ? hour.equals(session.hour) : session.hour == null);
     }
 
     @Override

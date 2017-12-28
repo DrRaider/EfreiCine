@@ -9,8 +9,9 @@ import raider.project.EfreiCine.model.Screening;
 public class ScreeningDao extends AbstractDao<Screening> {
 
     public Screening findByTheaterAndMovie(int tId, int mId) {
-        Criteria crit = createEntityCriteria();
-        crit.add(Restrictions.eq("theaterId", tId)).add(Restrictions.eq("movieId", mId));
-        return (Screening) crit.uniqueResult();
+        return (Screening) createEntityCriteria()
+                .add(Restrictions.eq("theaterId", tId))
+                .add(Restrictions.eq("movieId", mId))
+                .uniqueResult();
     }
 }

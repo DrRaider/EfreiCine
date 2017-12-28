@@ -14,7 +14,7 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     SessionDao dao;
 
-    public int countSessionByScreeningId(int sessionId) {
+    public long countSessionByScreeningId(int sessionId) {
         return dao.countByScreeningId(sessionId);
     }
 

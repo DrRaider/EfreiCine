@@ -16,9 +16,10 @@ public class MovieServiceImpl implements MovieService{
     @Autowired
     MovieDao movieDao;
 
-    public Movie addMovie(int movieId) throws IOException {
-        if(movieDao.exists(movieId)) {
-            return movieDao.findById(movieId);
+    public Movie save(int movieId) throws IOException {
+        Movie tmp = movieDao.findByTmdbId(movieId);
+        if(tmp != null) {
+            return tmp;
         }
 
         Movie movie = TheMovieDbAPI.retrieveMovieData(movieId);

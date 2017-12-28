@@ -53,12 +53,6 @@
         <form:form method="POST" modelAttribute="screeningSession" class="form-horizontal">
             <h4>Screening</h4>
             <div class="group">
-                <form:input required="true" type="hidden" path="screening.movieId" value="${movie.id}" id="movieId"/>
-                <div class="has-error">
-                    <form:errors path="screening.movieId" class="help-inline"/>
-                </div>
-            </div>
-            <div class="group">
                 <form:input required="true" type="hidden" path="screening.theaterId" value="${theater.id}" id="theaterId"/>
                 <div class="has-error">
                     <form:errors path="screening.theaterId" class="help-inline"/>
@@ -110,7 +104,7 @@
             </div>
             <div class="group">
                 <h5>Schedule</h5>
-                <form:input required="true" type="time" path="session.hour" id="hour"/>
+                <input required="true" type="time" name="hour" id="hour"/>
                 <span class="highlight"></span>
                 <span class="bar"></span>
                 <div class="has-error">
@@ -132,7 +126,7 @@
                 else
                     $this.removeClass('used');
             });
-            $('input[type=checkbox]').on('change', function (e) {
+            $('input[type=checkbox]').on('change', function () {
                 if ($('input[type=checkbox]:checked').length > 3) {
                     $(this).prop('checked', false);
                     alert("allowed only 3");

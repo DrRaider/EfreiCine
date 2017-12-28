@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -18,11 +19,11 @@ public class Screening {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty
+    @NotNull
     @Column(name="MOVIE_ID", nullable = false)
     private int movieId;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "THEATER_ID", nullable = false)
     private int theaterId;
 
@@ -34,7 +35,7 @@ public class Screening {
     @Column(name = "END_DATE", nullable = false)
     private String endDate;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "AGE_LIMIT", nullable = false)
     private int ageLimit;
 

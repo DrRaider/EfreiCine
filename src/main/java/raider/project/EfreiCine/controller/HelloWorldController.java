@@ -2,17 +2,20 @@ package raider.project.EfreiCine.controller;
 
 import java.io.IOException;
 import java.util.*;
+import java.text.ParseException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.text.DateFormat;
-import  java.text.SimpleDateFormat;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.uwetrottmann.tmdb2.entities.BaseMovie;
 import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,8 +27,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import org.springframework.web.bind.annotation.RequestParam;
+
 import raider.project.EfreiCine.model.*;
 import raider.project.EfreiCine.service.*;
 
@@ -113,10 +116,8 @@ public class HelloWorldController {
             return "register";
         }
 
-        User user = new User();
-        user = userTheater.getUser();
-        Theater theater = new Theater();
-        theater = userTheater.getTheater();
+        User user = userTheater.getUser();
+        Theater theater = userTheater.getTheater();
 
         UserProfile pro = new UserProfile();
         pro.setId(1);
@@ -138,23 +139,12 @@ public class HelloWorldController {
         linkedId.setTheaterId(theater.getId());
         userTheaterService.save(linkedId);
 
-        System.out.println("First Name : " + user.getFirstName());
-        System.out.println("Last Name : " + user.getLastName());
-        System.out.println("SSO ID : " + user.getSsoId());
-        System.out.println("Password : " + user.getPassword());
-        System.out.println("Email : " + user.getEmail());
-        System.out.println("Checking UserProfiles....");
-
-        System.out.println("UsrProfiles : " + user.getUserProfiles());
-
-
         model.addAttribute("success", "User " + user.getFirstName() + " has been registered successfully");
         return "registrationsuccess";
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchPage(ModelMap model) {
-
+    public String searchPage() {
         return "search";
     }
 
@@ -181,7 +171,6 @@ public class HelloWorldController {
         myMovie.setBackdropPath(Movie.IMG_PATH_PREFIX + myMovie.getBackdropPath());
         myMovie.setPosterPath(Movie.IMG_PATH_PREFIX + myMovie.getPosterPath());
 
-        //Add screening data on the page and push it on POST :)
         ScreeningSession screeningSession = new ScreeningSession();
         screeningSession.setScreening(new Screening());
         screeningSession.setSession(new Session());
@@ -200,30 +189,41 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.POST)
-    public String saveRegistration(@Valid ScreeningSession screeningSession, BindingResult result, ModelMap model) {
+    public String saveRegistration(@PathVariable("id") int id,
+                                   @RequestParam String hour,
+                                   @Valid ScreeningSession screeningSession,
+                                   BindingResult result
+    ) throws IOException, ParseException {
 
         if (result.hasErrors()) {
             System.out.println("There are errors");
-            return "movie";
+            return "/movie";
         }
+
+        movieService.save(id);
+
         Screening screening = screeningSession.getScreening();
+        screening.setMovieId(id);
+
         Session session = screeningSession.getSession();
+        DateFormat sdf = new SimpleDateFormat("hh:mm");
+        Date date = sdf.parse(hour);
+        session.setHour(date);
 
-        Screening test =  screeningService.getByTheaterAndMovie(screening.getTheaterId(), screening.getMovieId());
-        if (null == test) {
+        Screening test =  screeningService.getByTheaterAndMovie(screening.getTheaterId(), id);
+        if (null == test)
             screeningService.save(screening);
-        }
-        else {
-            screening.setId(test.getId());
-        }
 
-        if (sessionService.countSessionByScreeningId(screening.getId()) <= 3){
+        else
+            screening.setId(test.getId());
+
+
+        if (sessionService.countSessionByScreeningId(screening.getId()) < 3) {
             session.setScreeningId(screening.getId());
             sessionService.save(session);
         }
-
-
-        return "movie";
+        //TODO: send back message if >= 3
+        return "/movie";
     }
 
     private String getPrincipal(){

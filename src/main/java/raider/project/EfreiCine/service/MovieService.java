@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public interface MovieService {
 
-    public Movie addMovie(int movieId) throws IOException;
+    Movie save(int movieId) throws IOException;
 
 }
 
