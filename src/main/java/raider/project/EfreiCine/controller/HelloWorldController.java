@@ -5,6 +5,7 @@ import java.util.*;
 import java.text.ParseException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.uwetrottmann.tmdb2.entities.BaseMovie;
-import com.uwetrottmann.tmdb2.entities.BaseResultsPage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.web.context.request.WebRequest;
 import raider.project.EfreiCine.model.*;
 import raider.project.EfreiCine.service.*;
 
@@ -149,25 +150,34 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/search", method=RequestMethod.POST)
-    public String searchResult(@RequestParam String movie, ModelMap model) throws IOException {
-        BaseResultsPage<BaseMovie> searchResults = TheMovieDbAPI.searchMovie(movie);
-        for(BaseMovie m: searchResults.results) {
-            m.backdrop_path = Movie.IMG_PATH_PREFIX + m.backdrop_path;
-            m.poster_path = Movie.IMG_PATH_PREFIX + m.poster_path;
+    public String searchResult(@RequestParam String movie, ModelMap model, WebRequest request) throws IOException {
+        List<MovieQuick> searchResults = movieService.searchByTitle(movie).stream()
+                .map(MovieQuick::from)
+                .collect(Collectors.toList());
+
+        if(request.getParameter("use_external_api") != null) {
+            Set<Integer> localMovies = new HashSet<>();
+            for(MovieQuick m: searchResults)
+                localMovies.add(m.id);
+
+            for (BaseMovie m : TheMovieDbAPI.searchMovie(movie).results) {
+                if(!localMovies.contains(m.id))
+                    searchResults.add(MovieQuick.from(m));
+            }
         }
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         mapper.setDateFormat(df);
         String jsonInString = mapper.writeValueAsString(searchResults);
         model.addAttribute("search_results", jsonInString);
-
         return "search";
     }
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String getScreenings(@PathVariable("id") int id, ModelMap model) throws IOException {
-        Movie myMovie = TheMovieDbAPI.retrieveMovieData(id);
+        Movie myMovie = movieService.loadFromId(id);
         myMovie.setBackdropPath(Movie.IMG_PATH_PREFIX + myMovie.getBackdropPath());
         myMovie.setPosterPath(Movie.IMG_PATH_PREFIX + myMovie.getPosterPath());
 
@@ -200,7 +210,7 @@ public class HelloWorldController {
             return "/movie";
         }
 
-        movieService.save(id);
+        movieService.saveFromTmdb(id);
 
         Screening screening = screeningSession.getScreening();
         screening.setMovieId(id);

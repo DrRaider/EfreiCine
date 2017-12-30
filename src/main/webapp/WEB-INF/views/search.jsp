@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/app.css"/>
-    <script>var json = ${search_results};</script>
+    <script>var json_results = ${search_results};</script>
 </head>
 <body>
 <hgroup>
@@ -26,11 +26,15 @@
 <c:url var="searchUrl" value="/search" />
 <form action="${searchUrl}" method="post">
     <div class="group">
-        <input type="text" id="movie" name="movie" required="true"/>
+        <input type="text" id="movie" name="movie" required="true" value="${param.movie}"/>
         <span class="highlight"></span>
         <span class="bar"></span>
         <label>Movie Title</label>
+
     </div>
+
+    <input type="checkbox" id="use_external_api" name="use_external_api" checked>
+    <p>Use results from <a href="http://themoviedb.org/">TheMovieDb API</a></p>
     <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
     <div class="form-actions">
         <input class="btn btn-primary" type="submit" value="Search"/>
@@ -48,12 +52,13 @@
         <div class="container">
                 <table id="table">
                 <thead>
-                <tr>
+                <th>
                     <th data-field="id" data-formatter="LinkFormatter"></th>
-                    <th data-field="original_title"     data-sortable="true">Original title</th>
+                    <th data-field="originalTitle" data-sortable="true">Original title</th>
                     <th data-field="overview">Overview</th>
-                    <th data-field="release_date" data-sortable="true">Release date</th>
-                    <th data-field="poster_path" data-formatter="ImgFormatter">Poster</th>
+                    <th data-field="releaseDate" data-sortable="true">Release date</th>
+                    <th data-field="posterPath" data-formatter="ImgFormatter">Poster</th>
+                    <th data-field="local" data-formatter="LocalFormatter"></th>
 
                 </tr>
                 </thead>
@@ -78,7 +83,7 @@
         });
 
         $('#table').bootstrapTable({
-            data: json.results
+            data: json_results
         });
 
         /**
@@ -93,6 +98,10 @@
         */
         function LinkFormatter(value, row, index) {
             return "<a href='../movie/"+value+"'/>";
+        }
+
+        function LocalFormatter(value, row, index) {
+            return value ? "" : "External result"
         }
     </script>
 </body>
