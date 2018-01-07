@@ -24,7 +24,7 @@
     <h3>Search Movies</h3>
 </hgroup>
 <c:url var="searchUrl" value="/search" />
-<form action="${searchUrl}" method="post">
+<form action="${searchUrl}" method="get">
     <div class="group">
         <input type="text" id="movie" name="movie" required="true" value="${param.movie}"/>
         <span class="highlight"></span>
@@ -33,7 +33,7 @@
 
     </div>
 
-    <input type="checkbox" id="use_external_api" name="use_external_api" checked>
+    <input type="checkbox" id="use_external_api" name="use_external_api" value="1" checked>
     <p>Use results from <a href="http://themoviedb.org/">TheMovieDb API</a></p>
     <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
     <div class="form-actions">

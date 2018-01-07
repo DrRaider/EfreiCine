@@ -105,9 +105,11 @@ INSERT INTO APP_USER_PROFILE(type)
 VALUES ('DBA');
 
 
-/* Populate one Admin User which will further create other users for the application using GUI */
+/* Populate one Admin User which will further create other users for the application using GUI
+   The password is 'password'
+ */
 INSERT INTO APP_USER(APP_USER.sso_id, password, first_name, last_name, email, state)
-VALUES ('sam','$2a$10$4eqIF5s/ewJwHK1p8lqlFOEm2QIA0S8g6./Lok.pQxqcxaBZYChRm', 'Sam','Smith','samy@xyz.com', 'Active');
+VALUES ('sam','$2a$10$5EdhLiwcB5L.eTW4iVxlB.I6VTGR7Bn4RVlSxesigHb0FsKh6.MGC', 'Sam','Smith','samy@xyz.com', 'Active');
 
 
 /* Populate JOIN Table */

@@ -35,7 +35,7 @@ import raider.project.EfreiCine.service.*;
 
 
 @Controller
-public class HelloWorldController {
+public class HtmlController {
 
     @Autowired
     UserProfileService userProfileService;
@@ -144,37 +144,6 @@ public class HelloWorldController {
         return "registrationsuccess";
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchPage() {
-        return "search";
-    }
-
-    @RequestMapping(value = "/search", method=RequestMethod.POST)
-    public String searchResult(@RequestParam String movie, ModelMap model, WebRequest request) throws IOException {
-        List<MovieQuick> searchResults = movieService.searchByTitle(movie).stream()
-                .map(MovieQuick::from)
-                .collect(Collectors.toList());
-
-        if(request.getParameter("use_external_api") != null) {
-            Set<Integer> localMovies = new HashSet<>();
-            for(MovieQuick m: searchResults)
-                localMovies.add(m.id);
-
-            for (BaseMovie m : TheMovieDbAPI.searchMovie(movie).results) {
-                if(!localMovies.contains(m.id))
-                    searchResults.add(MovieQuick.from(m));
-            }
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        mapper.setDateFormat(df);
-        String jsonInString = mapper.writeValueAsString(searchResults);
-        model.addAttribute("search_results", jsonInString);
-        return "search";
-    }
-
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String getScreenings(@PathVariable("id") int id, ModelMap model) throws IOException {
         Movie myMovie = movieService.loadFromId(id);
@@ -192,7 +161,7 @@ public class HelloWorldController {
                 userTheaterService.findByUserId(
                         userService.findBySso(
                                 getPrincipal()
-                        ).getId()
+                        ).getId() //WOOUPS j'ai cassé ça, faut-il forcément garder le token csrf sur chaque page ?
                 )
         );
         return "/movie";
