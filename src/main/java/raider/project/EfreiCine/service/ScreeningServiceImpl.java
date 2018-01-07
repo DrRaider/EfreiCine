@@ -6,6 +6,7 @@ import raider.project.EfreiCine.model.Screening;
 import raider.project.EfreiCine.dao.ScreeningDao;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service("screeningService")
 @Transactional
@@ -13,6 +14,14 @@ public class ScreeningServiceImpl implements ScreeningService {
 
     @Autowired
     private ScreeningDao dao;
+
+    public List<Screening> getByTheater(int tId) {
+        return dao.findByTheater(tId);
+    }
+
+    public List<Screening> getByMovie(int mId) {
+        return dao.findByMovie(mId);
+    }
 
     public Screening getById(int id) {
         return dao.findById(id);

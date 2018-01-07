@@ -2,9 +2,6 @@ package raider.project.EfreiCine.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.hibernate.validator.constraints.NotEmpty;

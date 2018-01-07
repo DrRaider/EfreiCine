@@ -6,6 +6,7 @@ import raider.project.EfreiCine.dao.TheaterDao;
 import raider.project.EfreiCine.model.Theater;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 
 @Service("theaterService")
@@ -14,6 +15,10 @@ public class TheaterServiceImpl implements TheaterService {
 
     @Autowired
     TheaterDao dao;
+
+    public List<Theater> findAll() {
+        return dao.findAll();
+    }
 
     public Theater getById(int id) {
         return dao.findById(id);

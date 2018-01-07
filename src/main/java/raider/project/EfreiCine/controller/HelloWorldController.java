@@ -167,7 +167,10 @@ public class HelloWorldController {
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String getScreenings(@PathVariable("id") int id, ModelMap model) throws IOException {
-        Movie myMovie = TheMovieDbAPI.retrieveMovieData(id);
+        Movie myMovie = movieService.findByTmdbId(id);
+        if (myMovie == null)
+            myMovie = TheMovieDbAPI.retrieveMovieData(id);
+
         myMovie.setBackdropPath(Movie.IMG_PATH_PREFIX + myMovie.getBackdropPath());
         myMovie.setPosterPath(Movie.IMG_PATH_PREFIX + myMovie.getPosterPath());
 
@@ -189,10 +192,10 @@ public class HelloWorldController {
     }
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.POST)
-    public String saveRegistration(@PathVariable("id") int id,
-                                   @RequestParam String hour,
-                                   @Valid ScreeningSession screeningSession,
-                                   BindingResult result
+    public String saveScreening(@PathVariable("id") int id,
+                                @RequestParam String hour,
+                                @Valid ScreeningSession screeningSession,
+                                BindingResult result
     ) throws IOException, ParseException {
 
         if (result.hasErrors()) {
@@ -226,6 +229,79 @@ public class HelloWorldController {
         return "/movie";
     }
 
+    //Select theater first
+    @RequestMapping(value = "/byTheater", method = RequestMethod.GET)
+    public String searchByTheater(ModelMap model) {
+        model.addAttribute("theaters", theaterService.findAll());
+        return "byTheater";
+    }
+
+    //Select film after theater
+    @RequestMapping(value = "/theater/{id}", method = RequestMethod.GET)
+    public String TheaterMovie(@PathVariable("id") int id, ModelMap model) throws ParseException {
+        List<Screening> list = screeningService.getByTheater(id);
+        List<Movie> movies = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = new Date();
+        for (Screening s : list) {
+            if (sdf.parse(s.getEndDate()).compareTo(today) >= 0
+                    && sdf.parse(s.getStartDate()).compareTo(today) <= 0)
+                movies.add(movieService.findByTmdbId(s.getMovieId()));
+        }
+        model.addAttribute("screenings", list);
+        model.addAttribute("movies", movies);
+        model.addAttribute("theaterId", id);
+        return "/theater";
+    }
+
+    //Select film first
+    @RequestMapping(value = "/byMovie", method = RequestMethod.GET)
+    public String searchByMovie(ModelMap model) {
+        model.addAttribute("movies", movieService.findAll());
+        return "byMovie";
+    }
+
+    //Select theater after film
+    @RequestMapping(value = "/film/{id}", method = RequestMethod.GET)
+    public String MovieTheater(@PathVariable("id") int id, ModelMap model) throws ParseException {
+        List<Screening> list = screeningService.getByMovie(id);
+        List<Theater> theaters = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = new Date();
+        for (Screening s : list) {
+            if (sdf.parse(s.getEndDate()).compareTo(today) >= 0
+                    && sdf.parse(s.getStartDate()).compareTo(today) <= 0)
+                theaters.add(theaterService.getById(s.getTheaterId()));
+        }
+        model.addAttribute("screenings", list);
+        model.addAttribute("theaters", theaters);
+        model.addAttribute("movieId", id);
+        return "/film";
+    }
+
+
+    @RequestMapping(value = "/sessions/{movie}/{theater}", method = RequestMethod.GET)
+    public String sessions(@PathVariable("movie") int movie,
+                           @PathVariable("theater") int theater,
+                           ModelMap model
+    ) throws IOException {
+        if (movie == 0)
+            return "byMovie";
+
+        if (theater == 0)
+            return "byTheater";
+
+        Screening screening = screeningService.getByTheaterAndMovie(theater, movie);
+        model.addAttribute("theater", theaterService.getById(theater));
+        model.addAttribute("movie", movieService.findByTmdbId(movie));
+        model.addAttribute("screening", screening);
+        model.addAttribute("sessions", sessionService.findByScreeningId(screening.getId()));
+
+        return "/sessions";
+    }
+
+
+    // todo : (if user logged in and user of theater then crud) (views) (3 max sessions)
     private String getPrincipal(){
         String userName;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

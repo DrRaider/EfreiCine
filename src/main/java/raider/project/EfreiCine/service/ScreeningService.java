@@ -2,10 +2,16 @@ package raider.project.EfreiCine.service;
 
 import raider.project.EfreiCine.model.Screening;
 
+import java.util.List;
+
 public interface ScreeningService {
-    public Screening getByTheaterAndMovie(int theaterId, int movieId);
+    Screening getByTheaterAndMovie(int theaterId, int movieId);
 
-    public Screening getById(int id);
+    List<Screening> getByTheater(int tId);
 
-    public void save(Screening screening);
+    List<Screening> getByMovie(int mId);
+
+    Screening getById(int id);
+
+    void save(Screening screening);
 }

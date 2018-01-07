@@ -6,6 +6,7 @@ import raider.project.EfreiCine.dao.SessionDao;
 import raider.project.EfreiCine.model.Session;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service("sessionService")
 @Transactional
@@ -20,6 +21,11 @@ public class SessionServiceImpl implements SessionService {
 
     public Session getById(int id) {
         return dao.findById(id);
+    }
+
+    @Override
+    public List<Session> findByScreeningId(int sId) {
+        return dao.getByScreeningId(sId);
     }
 
     public void save(Session session) {

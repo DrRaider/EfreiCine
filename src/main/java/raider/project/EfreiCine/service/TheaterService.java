@@ -2,9 +2,13 @@ package raider.project.EfreiCine.service;
 
 import raider.project.EfreiCine.model.Theater;
 
+import java.util.List;
+
 public interface TheaterService {
 
-    public Theater getById(int id);
+    Theater getById(int id);
 
-    public void save(Theater theater);
+    List<Theater> findAll();
+
+    void save(Theater theater);
 }
