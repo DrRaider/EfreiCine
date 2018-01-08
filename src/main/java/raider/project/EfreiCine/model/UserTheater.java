@@ -3,6 +3,7 @@ package raider.project.EfreiCine.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="APP_USER_THEATER")
@@ -13,11 +14,11 @@ public class UserTheater {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "USER_ID", nullable = false)
     private int userId;
 
-    @NotEmpty
+    @NotNull
     @Column(name = "THEATER_ID", nullable = false)
     private int theaterId;
 

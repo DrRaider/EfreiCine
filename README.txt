@@ -7,17 +7,3 @@ TheMovieDbAPI and this wrapper : https://github.com/UweTrottmann/tmdb-java
 Thanks for those ;)
 
 Use script.sql to generate and populate your database (it produces one admin with 'sam as id and 'abc125' as password.)
-
-TODO :
-- session.get -> print already registered sessions and error message if > 3 and delete/update
-
-
-DONE :
-- Server up
-- Communicate with MySQL via hibernate
-- User management (ADMIN, DBA and USER level of access)
-- Bcryt password encryption
-- Login
-- Register (with unique SSO ID)
-- Search
-

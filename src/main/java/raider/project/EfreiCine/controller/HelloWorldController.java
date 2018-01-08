@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.uwetrottmann.tmdb2.entities.BaseMovie;
@@ -59,20 +60,7 @@ public class HelloWorldController {
 
     @RequestMapping(value = { "/", "/home" }, method = RequestMethod.GET)
     public String homePage(ModelMap model) {
-        model.addAttribute("greeting", "Hi, Welcome to mysite");
         return "welcome";
-    }
-
-    @RequestMapping(value = "/admin", method = RequestMethod.GET)
-    public String adminPage(ModelMap model) {
-        model.addAttribute("user", getPrincipal());
-        return "admin";
-    }
-
-    @RequestMapping(value = "/db", method = RequestMethod.GET)
-    public String dbaPage(ModelMap model) {
-        model.addAttribute("user", getPrincipal());
-        return "dba";
     }
 
     @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
@@ -225,45 +213,74 @@ public class HelloWorldController {
             session.setScreeningId(screening.getId());
             sessionService.save(session);
         }
-        //TODO: send back message if >= 3
+        //TODO: send back message if >= 3 && correct register && add Language
         return "/movie";
     }
 
     //Select theater first
     @RequestMapping(value = "/byTheater", method = RequestMethod.GET)
-    public String searchByTheater(ModelMap model) {
-        model.addAttribute("theaters", theaterService.findAll());
+    public String searchByTheater(ModelMap model) throws JsonProcessingException {
+        List<Theater> theaters = theaterService.findAll();
+        for(Theater t: theaters) {
+            t.setUserTheaters(null);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String jsonInString = mapper.writeValueAsString(theaters);
+        System.out.println(jsonInString);
+        model.addAttribute("theaters", jsonInString);
         return "byTheater";
+    }
+
+    //Select film first
+    @RequestMapping(value = "/byMovie", method = RequestMethod.GET)
+    public String searchByMovie(ModelMap model) throws JsonProcessingException {
+        List<Movie> movies = movieService.findAll();
+        for(Movie m: movies) {
+            m.setBackdropPath(Movie.IMG_PATH_PREFIX + m.getBackdropPath());
+            m.setPosterPath(Movie.IMG_PATH_PREFIX + m.getPosterPath());
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        mapper.setDateFormat(df);
+        String jsonInString = mapper.writeValueAsString(movies);
+        System.out.println(jsonInString);
+        model.addAttribute("movies", jsonInString);
+        return "byMovie";
     }
 
     //Select film after theater
     @RequestMapping(value = "/theater/{id}", method = RequestMethod.GET)
-    public String TheaterMovie(@PathVariable("id") int id, ModelMap model) throws ParseException {
+    public String TheaterMovie(@PathVariable("id") int id, ModelMap model) throws ParseException, JsonProcessingException {
         List<Screening> list = screeningService.getByTheater(id);
         List<Movie> movies = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date today = new Date();
         for (Screening s : list) {
             if (sdf.parse(s.getEndDate()).compareTo(today) >= 0
-                    && sdf.parse(s.getStartDate()).compareTo(today) <= 0)
-                movies.add(movieService.findByTmdbId(s.getMovieId()));
+                    && sdf.parse(s.getStartDate()).compareTo(today) <= 0) {
+                Movie tmp = movieService.findByTmdbId(s.getMovieId());
+                tmp.setBackdropPath(Movie.IMG_PATH_PREFIX + tmp.getBackdropPath());
+                tmp.setPosterPath(Movie.IMG_PATH_PREFIX + tmp.getPosterPath());
+                movies.add(tmp);
+            }
         }
-        model.addAttribute("screenings", list);
-        model.addAttribute("movies", movies);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setDateFormat(sdf);
+        String movieJSON = mapper.writeValueAsString(movies);
+        System.out.println(movieJSON);
+        model.addAttribute("movies", movieJSON);
         model.addAttribute("theaterId", id);
         return "/theater";
     }
 
-    //Select film first
-    @RequestMapping(value = "/byMovie", method = RequestMethod.GET)
-    public String searchByMovie(ModelMap model) {
-        model.addAttribute("movies", movieService.findAll());
-        return "byMovie";
-    }
 
     //Select theater after film
     @RequestMapping(value = "/film/{id}", method = RequestMethod.GET)
-    public String MovieTheater(@PathVariable("id") int id, ModelMap model) throws ParseException {
+    public String MovieTheater(@PathVariable("id") int id, ModelMap model) throws ParseException, JsonProcessingException {
         List<Screening> list = screeningService.getByMovie(id);
         List<Theater> theaters = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -273,36 +290,54 @@ public class HelloWorldController {
                     && sdf.parse(s.getStartDate()).compareTo(today) <= 0)
                 theaters.add(theaterService.getById(s.getTheaterId()));
         }
-        model.addAttribute("screenings", list);
-        model.addAttribute("theaters", theaters);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.setDateFormat(sdf);
+        String theaterJSON = mapper.writeValueAsString(theaters);
+        System.out.println(theaters);
+        model.addAttribute("theaters", theaterJSON);
         model.addAttribute("movieId", id);
         return "/film";
     }
 
 
     @RequestMapping(value = "/sessions/{movie}/{theater}", method = RequestMethod.GET)
-    public String sessions(@PathVariable("movie") int movie,
-                           @PathVariable("theater") int theater,
+    public String sessions(@PathVariable("movie") int movieId,
+                           @PathVariable("theater") int theaterId,
                            ModelMap model
     ) throws IOException {
-        if (movie == 0)
-            return "byMovie";
+        if (movieId == 0)
+            return "redirect:/byMovie";
 
-        if (theater == 0)
-            return "byTheater";
+        if (theaterId == 0)
+            return "redirect:/byTheater";
 
-        Screening screening = screeningService.getByTheaterAndMovie(theater, movie);
-        model.addAttribute("theater", theaterService.getById(theater));
-        model.addAttribute("movie", movieService.findByTmdbId(movie));
+        Screening screening = screeningService.getByTheaterAndMovie(theaterId, movieId);
+        List<Session> sessions = sessionService.findByScreeningId(screening.getId());
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        mapper.setDateFormat(df);
+        String jsonInString = mapper.writeValueAsString(sessions);
+
+        Theater theater = theaterService.getById(theaterId);
+        theater.setUserTheaters(null);
+
+        Movie movie = movieService.findByTmdbId(movieId);
+        movie.setBackdropPath(Movie.IMG_PATH_PREFIX + movie.getBackdropPath());
+        movie.setPosterPath(Movie.IMG_PATH_PREFIX + movie.getPosterPath());
+
+        System.out.println(jsonInString);
+        model.addAttribute("theater", theater);
+        model.addAttribute("movie", movie);
         model.addAttribute("screening", screening);
-        model.addAttribute("sessions", sessionService.findByScreeningId(screening.getId()));
+        model.addAttribute("sessions", jsonInString);
 
-        return "/sessions";
+        return "sessions";
     }
 
-
-    // todo : (if user logged in and user of theater then crud) (views) (3 max sessions)
     private String getPrincipal(){
+
         String userName;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

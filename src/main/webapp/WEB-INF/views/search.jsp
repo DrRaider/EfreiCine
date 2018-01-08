@@ -79,7 +79,7 @@
 
         $('#table').bootstrapTable({
             data: json.results
-        });
+        }).bootstrapTable('hideLoading');
 
         /**
         * @return {string}
