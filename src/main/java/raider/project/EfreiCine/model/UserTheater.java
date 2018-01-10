@@ -1,7 +1,5 @@
 package raider.project.EfreiCine.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -9,18 +7,19 @@ import javax.validation.constraints.NotNull;
 @Table(name="APP_USER_THEATER")
 public class UserTheater {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @NotNull
-    @Column(name = "USER_ID", nullable = false)
-    private int userId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
     @NotNull
-    @Column(name = "THEATER_ID", nullable = false)
-    private int theaterId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "THEATER_ID")
+    private Theater theater;
 
     public int getId() {
         return id;
@@ -30,20 +29,20 @@ public class UserTheater {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getTheaterId() {
-        return theaterId;
+    public Theater getTheater() {
+        return theater;
     }
 
-    public void setTheaterId(int theaterId) {
-        this.theaterId = theaterId;
+    public void setTheater(Theater theater) {
+        this.theater = theater;
     }
 
     @Override
@@ -54,15 +53,15 @@ public class UserTheater {
         UserTheater that = (UserTheater) o;
 
         if (id != that.id) return false;
-        if (userId != that.userId) return false;
-        return theaterId == that.theaterId;
+        if (user != null ? !user.equals(that.user) : that.user != null) return false;
+        return theater != null ? theater.equals(that.theater) : that.theater == null;
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + userId;
-        result = 31 * result + theaterId;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (theater != null ? theater.hashCode() : 0);
         return result;
     }
 
@@ -70,8 +69,8 @@ public class UserTheater {
     public String toString() {
         return "UserTheater{" +
                 "id=" + id +
-                ", userId=" + userId +
-                ", theaterId=" + theaterId +
+                ", user=" + user +
+                ", theater=" + theater +
                 '}';
     }
 }

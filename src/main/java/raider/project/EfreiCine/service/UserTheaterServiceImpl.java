@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raider.project.EfreiCine.dao.UserTheaterDao;
+import raider.project.EfreiCine.model.User;
 import raider.project.EfreiCine.model.UserTheater;
 
 @Service("userTheaterService")
@@ -17,8 +18,8 @@ public class UserTheaterServiceImpl implements UserTheaterService {
         dao.save(userTheater);
     }
 
-    public UserTheater findByUserId(int id) {
-        return dao.findByUserId(id);
+    public UserTheater findByUserId(User user) {
+        return dao.findByUserId(user);
     }
 
 }

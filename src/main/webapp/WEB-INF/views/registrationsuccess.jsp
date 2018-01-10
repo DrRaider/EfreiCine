@@ -4,16 +4,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>User Registration Form</title>
-    <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"></link>
-    <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"></link>
+    <link href="<c:url value='/static/css/bootstrap.css' />" rel="stylesheet"/>
+    <link href="<c:url value='/static/css/app.css' />" rel="stylesheet"/>
 </head>
 <body>
     <div class="success">
-        Confirmation message : ${success}
-        <br>
-        Would you like to <a href="<c:url value='/register' />">Add More Users</a>?
-        <br/>
-        Go to <a href="<c:url value='/admin' />">Admin Page</a> OR <a href="<c:url value="/logout" />">Logout</a>   
+        <c:if test="${fail != null}">
+            Fail message : ${fail}
+            <br/>
+            Go to <a href="<c:url value='/register' />">Register</a> or <a href="<c:url value="/" />">Home</a>
+        </c:if>
+        <c:if test="${success != null}">
+            Confirmation message : ${success}
+            <br/>
+            Go to <a href="<c:url value='/search' />">Search</a> or <a href="<c:url value="/logout" />">Logout</a>
+        </c:if>
     </div>
      
 </body>

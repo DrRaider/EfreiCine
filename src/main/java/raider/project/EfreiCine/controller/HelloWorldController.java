@@ -109,26 +109,31 @@ public class HelloWorldController {
 
         UserProfile pro = new UserProfile();
         pro.setId(1);
-        pro.setType("USER");
+        pro.setType("ADMIN");
         Set<UserProfile> profile = new HashSet<>();
         profile.add(pro);
         user.setUserProfiles(profile);
-        userService.save(user);
+        try {
+            userService.save(user);
+        }
+        catch (Exception e) {
+            model.addAttribute("fail", "User " + user.getFirstName() + " is already registered");
+            model.addAttribute("success", null);
+            return "registrationsuccess";
+        }
 
-        Set<User> userId = new HashSet<>();
-        userId.add(user);
-        System.out.println("profile :" + theater);
-        theater.setUserTheaters(userId);
         System.out.println("profile :" + theater);
         theaterService.save(theater);
 
         UserTheater linkedId = new UserTheater();
-        linkedId.setUserId(user.getId());
-        linkedId.setTheaterId(theater.getId());
+        linkedId.setUser(user);
+        linkedId.setTheater(theater);
         userTheaterService.save(linkedId);
 
+        model.addAttribute("fail", null);
         model.addAttribute("success", "User " + user.getFirstName() + " has been registered successfully");
         return "registrationsuccess";
+
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -173,7 +178,7 @@ public class HelloWorldController {
                 userTheaterService.findByUserId(
                         userService.findBySso(
                                 getPrincipal()
-                        ).getId()
+                        )
                 )
         );
         return "/movie";
@@ -208,13 +213,13 @@ public class HelloWorldController {
         else
             screening.setId(test.getId());
 
-
         if (sessionService.countSessionByScreeningId(screening.getId()) < 3) {
             session.setScreeningId(screening.getId());
             sessionService.save(session);
         }
-        //TODO: send back message if >= 3 && correct register && add Language
-        return "/movie";
+        else
+            return "redirect:/movie/"+id+"?error";
+        return "redirect:/sessions/"+id+"/"+screening.getTheaterId();
     }
 
     //Select theater first
@@ -282,6 +287,7 @@ public class HelloWorldController {
     @RequestMapping(value = "/film/{id}", method = RequestMethod.GET)
     public String MovieTheater(@PathVariable("id") int id, ModelMap model) throws ParseException, JsonProcessingException {
         List<Screening> list = screeningService.getByMovie(id);
+        System.out.println(list);
         List<Theater> theaters = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date today = new Date();
@@ -290,6 +296,7 @@ public class HelloWorldController {
                     && sdf.parse(s.getStartDate()).compareTo(today) <= 0)
                 theaters.add(theaterService.getById(s.getTheaterId()));
         }
+        System.out.println(theaters);
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setDateFormat(sdf);
@@ -348,5 +355,4 @@ public class HelloWorldController {
         }
         return userName;
     }
-
 }

@@ -46,21 +46,21 @@
         </div>
     </div>
     <div class="col-md-6">
-    <br>
-    <br>
-    <h3 style="display: inline">Theater :</h3>
-    <h4 style="display: inline">${theater.number}, ${theater.street} - ${theater.city}.</h4>
-    <br>
-    <br>
-    <h3 style="display: inline">Start date : </h3>
-    <h4 style="display: inline">${screening.startDate}.</h4>
-    <br>
-    <h3 style="display: inline">End date : </h3>
-    <h4 style="display: inline">${screening.endDate}.</h4>
-    <br>
-    <h3 style="display: inline">Age limit : </h3>
-    <h4 style="display: inline">Forbidden under ${screening.ageLimit} yo.</h4>
-    <br><br>
+        <br>
+        <br>
+        <h3 style="display: inline">Theater :</h3>
+        <h4 style="display: inline">${theater.number}, ${theater.street} - ${theater.city}.</h4>
+        <br>
+        <br>
+        <h3 style="display: inline">Start date : </h3>
+        <h4 style="display: inline">${screening.startDate}.</h4>
+        <br>
+        <h3 style="display: inline">End date : </h3>
+        <h4 style="display: inline">${screening.endDate}.</h4>
+        <br>
+        <h3 style="display: inline">Age limit : </h3>
+        <h4 style="display: inline">Forbidden under ${screening.ageLimit} yo.</h4>
+        <br><br>
     </div>
     <div class="col-md-3">
     <c:if test="${sessions != null}">

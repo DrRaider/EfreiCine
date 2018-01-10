@@ -49,6 +49,11 @@
         </div>
         <%--@elvariable id="screeningSession" type="raider.project.EfreiCine.model.ScreeningSession"--%>
         <form:form method="POST" modelAttribute="screeningSession" class="form-horizontal">
+            <c:if test="${param.error != null}">
+                <div class="alert alert-danger">
+                    <p>Ths movie already have 3 sessions !</p>
+                </div>
+            </c:if>
             <h4>Screening</h4>
             <div class="group">
                 <form:input required="true" type="hidden" path="screening.theaterId" value="${theater.id}" id="theaterId"/>

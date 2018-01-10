@@ -17,7 +17,11 @@
 </head>
 <body>
     <a href="login">Login (for theater owners only)</a>
+    <br>
+    <a href="search">Search (for theater owners only)</a>
+    <br>
     <a href="byMovie">Search movie</a>
+    <br>
     <a href="byTheater">Search Theater</a>
 
 </body>
