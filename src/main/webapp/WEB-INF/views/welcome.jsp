@@ -23,6 +23,8 @@
     <a href="byMovie">Search movie</a>
     <br>
     <a href="byTheater">Search Theater</a>
+    <br>
+    <a href="logout">Logout</a>
 
 </body>
 </html>

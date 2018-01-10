@@ -35,7 +35,7 @@ import raider.project.EfreiCine.service.*;
 
 
 @Controller
-public class HelloWorldController {
+public class MainController {
 
     @Autowired
     UserProfileService userProfileService;
@@ -108,7 +108,7 @@ public class HelloWorldController {
         Theater theater = userTheater.getTheater();
 
         UserProfile pro = new UserProfile();
-        pro.setId(1);
+        pro.setId(2);
         pro.setType("ADMIN");
         Set<UserProfile> profile = new HashSet<>();
         profile.add(pro);

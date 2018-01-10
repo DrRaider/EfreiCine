@@ -76,7 +76,9 @@
 
     </c:if>
     </div>
+    <a href="/">Home</a>
 </div>
+
 <script>
     $(document).ready(function() {
             // language=JQuery-CSS

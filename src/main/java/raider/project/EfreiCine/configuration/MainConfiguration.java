@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.JstlView;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = "raider.project.EfreiCine")
-public class HelloWorldConfiguration extends WebMvcConfigurerAdapter {
+public class MainConfiguration extends WebMvcConfigurerAdapter {
 
     @Autowired
     RoleToUserProfileConverter roleToUserProfileConverter;
